@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Singleton;
+using AbstractFactory;
+using Builder;
 
 namespace DesignPatternsClass
 {
@@ -11,7 +13,9 @@ namespace DesignPatternsClass
     {
         static void Main(string[] args)
         {
-            SingeltonPatternDemo();
+            //SingletonPatternDemo();
+            //AbstractFactoryPatternDemo();
+            BuilderPatternDemo();
         }
 
         private static void SingeltonPatternDemo()
@@ -24,5 +28,37 @@ namespace DesignPatternsClass
             Console.WriteLine("next serial: " + generator.NextSerial);
         }
 
+        private static void AbstractFactoryPatternDemo()
+        {
+            string whatToMake = "Road Bike";
+            AbstractBikeFactory factory = null;
+
+            if( whatToMake.Equals("Road Bike"))
+            {
+                factory = new RoadBikeFactory();
+            }
+            else
+            {
+                factory = new MountainBikeFactory();
+            }
+
+            //Create the bike parts
+            IBikeFrame bikeFrame = factory.CreateBikeFrame();
+            IBikeSeat bikeSeat = factory.CreateBikeSeat();
+
+            //Show what we created
+            Console.WriteLine(bikeFrame.BikeFrameParts);
+            Console.WriteLine(bikeSeat.BikeSeatParts);
+
+        }
+
+        private static void BuilderPatternDemo()
+        {
+            AbstractMountainBike mountainBike = new Downhill(new WideWheel(24), BikeColor.Green);
+            AbstractBikeBuilder builder = new MountainBikeBuilder(mountainBike);
+            BikeDirector director = new MountainBikeDirector();
+            IBicycle bicycle = director.Build(builder);
+            Console.WriteLine(bicycle);
+        }        
     }
 }
